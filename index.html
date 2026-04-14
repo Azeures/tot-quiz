@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Called &amp; Sent — Vocation Discernment Quiz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Cinzel:wght@400;500;600&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #0c1829;
+      --midnight:   #111f35;
+      --card:       #162036;
+      --gold:       #c9a84c;
+      --gold-light: #e8d5a3;
+      --gold-dim:   rgba(201,168,76,0.17);
+      --cream:      #f5efe3;
+      --muted:      #8a7a68;
+      --border:     rgba(201,168,76,0.2);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Crimson Text', Georgia, serif;
+      background: var(--navy);
+      color: var(--cream);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2.5rem 1rem 5rem;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(201,168,76,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(201,168,76,0.05) 0%, transparent 50%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .quiz-wrap {
+      width: 100%; max-width: 760px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── screens ── */
+    .screen { display: none; }
+    .screen.active { display: block; animation: rise 0.55s cubic-bezier(0.22,1,0.36,1); }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── card ── */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      position: relative; overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent 0%, var(--gold) 40%, var(--gold-light) 60%, transparent 100%);
+    }
+
+    /* ── shared elements ── */
+    .ornament {
+      text-align: center; color: var(--gold);
+      font-size: 1rem; letter-spacing: 0.6rem;
+      margin-bottom: 1.25rem; opacity: 0.85;
+    }
+    .divider {
+      width: 60px; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 1.25rem auto;
+    }
+    .cinzel-sm {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold);
+    }
+
+    /* ══════════════════════════
+       WELCOME
+    ══════════════════════════ */
+    #screen-welcome .card { padding: 3rem 3.5rem 2.75rem; text-align: center; }
+
+    .title-main {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.1rem, 6vw, 3rem);
+      font-weight: 600; color: var(--gold-light);
+      letter-spacing: 0.06em; line-height: 1.15;
+      margin-bottom: 0.3rem;
+    }
+    .title-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      font-style: italic; color: var(--muted);
+    }
+    .welcome-verse {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-style: italic;
+      color: rgba(201,168,76,0.7); line-height: 1.75;
+      margin: 1.5rem 0;
+    }
+    .welcome-body {
+      font-size: 1.12rem; line-height: 1.85;
+      color: rgba(245,239,227,0.82);
+      max-width: 540px; margin: 0 auto 2rem;
+    }
+    .gender-row {
+      display: flex; gap: 1rem;
+      justify-content: center; margin-bottom: 2rem;
+    }
+    .gender-btn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem; padding: 0.75rem 2.2rem;
+      border: 1px solid rgba(201,168,76,0.35);
+      background: transparent; color: var(--cream);
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.28s ease; letter-spacing: 0.04em;
+    }
+    .gender-btn:hover { background: var(--gold-dim); border-color: rgba(201,168,76,0.6); }
+    .gender-btn.sel   { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-light); }
+
+    .cta-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem; letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.8rem;
+      background: var(--gold); color: var(--navy);
+      border: none; cursor: pointer; border-radius: 2px;
+      font-weight: 600; transition: all 0.3s ease;
+      opacity: 0.35; pointer-events: none;
+    }
+    .cta-btn.on { opacity: 1; pointer-events: all; }
+    .cta-btn.on:hover {
+      background: var(--gold-light);
+      box-shadow: 0 8px 28px rgba(201,168,76,0.35);
+      transform: translateY(-2px);
+    }
+    .welcome-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.88rem;
+      color: var(--muted); margin-top: 1.5rem; line-height: 1.65;
+    }
+
+    /* ══════════════════════════
+       QUIZ
+    ══════════════════════════ */
+    #screen-quiz .card { padding: 2.5rem 2.75rem; }
+
+    .prog-row {
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 0.6rem;
+    }
+    .prog-track {
+      width: 100%; height: 2px;
+      background: rgba(201,168,76,0.12);
+      border-radius: 99px; margin-bottom: 2rem; overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 0.55s cubic-bezier(0.22,1,0.36,1);
+    }
+    .q-context {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--gold);
+      opacity: 0.75; margin-bottom: 0.45rem;
+    }
+    .q-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 3vw, 1.55rem);
+      font-weight: 500; color: var(--cream);
+      line-height: 1.5; margin-bottom: 1.85rem;
+    }
+    .answers { display: grid; gap: 0.7rem; }
+    .ans-btn {
+      text-align: left;
+      padding: 0.95rem 1.2rem;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(201,168,76,0.13);
+      border-radius: 2px;
+      color: rgba(245,239,227,0.82);
+      font-family: 'Crimson Text', serif;
+      font-size: 1.08rem; line-height: 1.55;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: flex; align-items: flex-start; gap: 0.8rem;
+    }
+    .ans-btn:hover {
+      background: rgba(201,168,76,0.09);
+      border-color: rgba(201,168,76,0.45);
+      color: var(--cream); transform: translateX(4px);
+    }
+    .ans-btn.sel {
+      background: rgba(201,168,76,0.16);
+      border-color: var(--gold); color: var(--gold-light);
+    }
+    .ans-ltr {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 0.08em;
+      color: var(--gold); opacity: 0.65;
+      padding-top: 0.3rem; min-width: 14px; flex-shrink: 0;
+    }
+    .ans-btn.sel .ans-ltr { opacity: 1; }
+    .q-nav { display: flex; justify-content: flex-end; margin-top: 2rem; }
+    .next-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.65rem; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.8rem 1.8rem;
+      background: var(--gold); color: var(--navy);
+      border: none; cursor: pointer; border-radius: 2px;
+      font-weight: 600; transition: all 0.3s ease;
+      opacity: 0.3; pointer-events: none;
+    }
+    .next-btn.on { opacity: 1; pointer-events: all; }
+    .next-btn.on:hover {
+      background: var(--gold-light);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 22px rgba(201,168,76,0.3);
+    }
+
+    /* ══════════════════════════
+       RESULTS
+    ══════════════════════════ */
+    #screen-results .card { padding: 2.75rem 3rem; }
+
+    .res-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.5rem, 4vw, 2.1rem);
+      color: var(--gold-light); text-align: center;
+      letter-spacing: 0.05em; margin-bottom: 0.3rem;
+    }
+    .res-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.1rem;
+      color: var(--muted); text-align: center;
+    }
+    .voc-card {
+      margin-bottom: 1.4rem;
+      padding: 1.6rem 1.75rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(201,168,76,0.14);
+      border-radius: 2px;
+      animation: rise 0.5s ease both;
+    }
+    .voc-card:nth-child(1) {
+      background: rgba(201,168,76,0.08);
+      border-color: rgba(201,168,76,0.38);
+      animation-delay: 0.1s;
+    }
+    .voc-card:nth-child(2) { animation-delay: 0.25s; }
+    .voc-card:nth-child(3) { animation-delay: 0.4s; }
+    .voc-rank {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.3rem; opacity: 0.85;
+    }
+    .voc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.55rem; font-weight: 600;
+      color: var(--cream); margin-bottom: 0.5rem; line-height: 1.25;
+    }
+    .voc-card:nth-child(1) .voc-name {
+      font-size: 1.8rem; color: var(--gold-light);
+    }
+    .bar-track {
+      height: 2px;
+      background: rgba(201,168,76,0.12);
+      border-radius: 99px; margin: 0.5rem 0 1.1rem; overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%; width: 0;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      border-radius: 99px;
+      transition: width 1.1s cubic-bezier(0.22,1,0.36,1);
+    }
+    .voc-desc {
+      font-family: 'Crimson Text', serif;
+      font-size: 1.05rem; line-height: 1.75;
+      color: rgba(245,239,227,0.82); margin-bottom: 0.65rem;
+    }
+    .voc-sg {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.93rem;
+      color: rgba(201,168,76,0.72); line-height: 1.55;
+    }
+    .res-footer {
+      text-align: center; margin-top: 2.25rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(201,168,76,0.13);
+    }
+    .restart-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.63rem; letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 0.75rem 1.8rem;
+      background: transparent; color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.38);
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .restart-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+    .disclaimer {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.9rem;
+      color: var(--muted); margin-top: 1.5rem;
+      line-height: 1.75; max-width: 520px;
+      margin-left: auto; margin-right: auto;
+    }
+
+    /* ── share section ── */
+    .share-section {
+      margin-top: 2rem;
+      padding: 1.75rem 1.5rem;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 2px;
+      text-align: center;
+    }
+    .share-title {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .share-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1rem;
+      color: var(--muted); margin-bottom: 1.5rem;
+    }
+    .share-preview-wrap {
+      display: flex; justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+    .story-preview-img {
+      width: 155px; height: 275px; object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid rgba(201,168,76,0.4);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+    }
+    .story-preview-img:hover { transform: scale(1.03); }
+    .story-preview-loading {
+      width: 155px; height: 275px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(201,168,76,0.18);
+      border-radius: 3px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.75rem;
+    }
+    .preview-spinner {
+      width: 28px; height: 28px;
+      border: 2px solid rgba(201,168,76,0.2);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .share-btns {
+      display: flex; gap: 0.7rem;
+      justify-content: center; flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .share-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem; letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 0.72rem 1.3rem;
+      border: 1px solid rgba(201,168,76,0.38);
+      background: transparent; color: var(--gold);
+      cursor: pointer; border-radius: 2px;
+      transition: all 0.26s ease;
+      display: inline-flex; align-items: center; gap: 0.45rem;
+    }
+    .share-btn:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+    .share-btn--gold { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+    .share-btn--gold:hover { background: var(--gold-light); }
+    .share-link-row {
+      display: flex; align-items: stretch;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(201,168,76,0.13);
+      border-radius: 2px; overflow: hidden;
+    }
+    .share-link-url {
+      flex: 1; padding: 0.65rem 0.8rem;
+      font-family: 'Crimson Text', serif;
+      font-size: 0.82rem; color: var(--muted);
+      overflow: hidden; text-overflow: ellipsis;
+      white-space: nowrap; text-align: left;
+      background: transparent; border: none; cursor: default;
+    }
+    .share-copy-btn {
+      padding: 0.65rem 1rem;
+      font-family: 'Cinzel', serif;
+      font-size: 0.55rem; letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: transparent; color: var(--gold);
+      border: none; border-left: 1px solid rgba(201,168,76,0.15);
+      cursor: pointer; transition: background 0.22s;
+      flex-shrink: 0;
+    }
+    .share-copy-btn:hover { background: rgba(201,168,76,0.1); }
+    .share-toast {
+      font-family: 'Cinzel', serif;
+      font-size: 0.58rem; letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold); margin-top: 0.85rem;
+      min-height: 1.1em;
+      opacity: 0; transition: opacity 0.35s ease;
+    }
+    .share-toast.show { opacity: 1; }
+    .share-ig-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.82rem;
+      color: var(--muted); margin-top: 0.6rem;
+    }
+
+    /* ── responsive ── */
+    @media (max-width: 600px) {
+      body { padding: 1rem 0.75rem 3rem; }
+      #screen-welcome .card { padding: 2rem 1.5rem; }
+      #screen-quiz .card    { padding: 1.75rem 1.25rem; }
+      #screen-results .card { padding: 2rem 1.25rem; }
+      .gender-row { flex-direction: column; align-items: center; }
+      .gender-btn { width: 200px; }
+      .share-btns { flex-direction: column; align-items: center; }
+      .share-btn { width: 240px; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-wrap">
+
+  <!-- WELCOME -->
+  <div id="screen-welcome" class="screen active">
+    <div class="card">
+      <div class="ornament">&#10022; &nbsp; &#10022; &nbsp; &#10022;</div>
+      <h1 class="title-main">Called &amp; Sent</h1>
+      <p class="title-sub">A Vocation Discernment Quiz for Singapore Catholics</p>
+      <div class="divider"></div>
+      <p class="welcome-verse">
+        "Before I formed you in the womb I knew you,<br>
+        before you were born I set you apart."<br>
+        <em style="font-size:0.92em;">— Jeremiah 1:5</em>
+      </p>
+      <p class="welcome-body">
+        Each of us is called by name. This 20-question quiz — rooted in the
+        Singapore Catholic experience — explores your prayer, desires, community,
+        and apostolate to suggest which vocation may be quietly stirring in your heart.
+      </p>
+      <p class="cinzel-sm" style="margin-bottom:0.85rem;">I am&hellip;</p>
+      <div class="gender-row">
+        <button class="gender-btn" data-g="M" onclick="pickGender(this)">A Man</button>
+        <button class="gender-btn" data-g="F" onclick="pickGender(this)">A Woman</button>
+      </div>
+      <button id="start-btn" class="cta-btn" onclick="startQuiz()">Begin Discernment &rarr;</button>
+      <p class="welcome-note">
+        This quiz is for prayerful fun &mdash; not a definitive answer.<br>
+        Speak with a spiritual director for deeper discernment.
+      </p>
+    </div>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz" class="screen">
+    <div class="card">
+      <div class="prog-row">
+        <span class="cinzel-sm" id="q-counter">Question 1 of 20</span>
+        <span class="cinzel-sm" id="q-pct">5%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill" style="width:5%"></div>
+      </div>
+      <p class="q-context" id="q-ctx"></p>
+      <p class="q-text"    id="q-txt"></p>
+      <div class="answers" id="ans-wrap"></div>
+      <div class="q-nav">
+        <button class="next-btn" id="next-btn" onclick="advance()">
+          <span id="next-lbl">Next &rarr;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="screen-results" class="screen">
+    <div class="card">
+      <div class="ornament">&#10022; &nbsp; &#10022; &nbsp; &#10022;</div>
+      <h2 class="res-title">Your Vocation Profile</h2>
+      <p class="res-sub">Based on your answers, the Spirit may be calling you toward&hellip;</p>
+      <div class="divider"></div>
+      <div id="res-wrap"></div>
+      <!-- SHARE SECTION -->
+      <div class="share-section">
+        <p class="share-title">&#10022; &nbsp; Share Your Result &nbsp; &#10022;</p>
+        <p class="share-sub">Invite a friend to discover their vocation too</p>
+
+        <!-- Story card preview -->
+        <div class="share-preview-wrap">
+          <img id="story-preview-img" class="story-preview-img" alt="Story card" style="display:none">
+          <div class="story-preview-loading" id="story-preview-loading">
+            <div class="preview-spinner"></div>
+            <span style="font-family:'Cinzel',serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;">Generating&hellip;</span>
+          </div>
+        </div>
+
+        <!-- Action buttons -->
+        <div class="share-btns">
+          <button class="share-btn" onclick="downloadStory()">
+            &#8595;&nbsp; Download Story Card
+          </button>
+          <button class="share-btn share-btn--gold" onclick="shareNative()">
+            &#10022;&nbsp; Share &amp; Invite Friends
+          </button>
+        </div>
+
+        <!-- Copyable link -->
+        <div class="share-link-row">
+          <span class="share-link-url" id="share-link-url">Building your link&hellip;</span>
+          <button class="share-copy-btn" onclick="copyLink()">Copy Link</button>
+        </div>
+
+        <p class="share-ig-note">On mobile, &ldquo;Share &amp; Invite&rdquo; lets you post your story card directly to Instagram Stories &nbsp;&#128247;</p>
+        <p id="share-toast" class="share-toast"></p>
+      </div>
+
+      <div class="res-footer">
+        <button class="restart-btn" onclick="restart()">&larr; Take the Quiz Again</button>
+        <p class="disclaimer">
+          These results are a playful starting point &mdash; not spiritual direction.
+          Whatever emerged, we encourage you to pray, seek a spiritual director,
+          and attend a vocations evening at your parish or a religious community
+          here in Singapore.
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════
+   VOCATION DEFINITIONS
+════════════════════════════════════════ */
+const VOC = {
+  VD: {
+    name: "Verbum Dei Community",
+    gender: ["F"],
+    desc: "You are drawn to contemplative community life rooted entirely in the living Word of God. The Verbum Dei is a feminine apostolic community whose heart is Scripture — proclaiming it in intimate community, prayer, and mission. You likely carry a contemplative soul with apostolic fire, drawn to small intentional communities of prayer and generous service.",
+    sg: "Verbum Dei has a presence in Singapore, forming women in deep Scriptural spirituality and missionary zeal."
+  },
+  CGS: {
+    name: "Congregation of the Good Shepherd",
+    gender: ["F"],
+    desc: "Your heart is broken open for those the world forgets — women and girls who are marginalized, exploited, or at risk. The Good Shepherd Sisters embody the mercy of Christ toward the lost sheep. You feel drawn to pour your life into social work, restoration, and pastoral care for the hidden and vulnerable in society.",
+    sg: "The Good Shepherd Sisters are active in Singapore's social services, walking alongside women and girls on the margins of society."
+  },
+  IJ: {
+    name: "Infant Jesus Sisters (CHIJ)",
+    gender: ["F"],
+    desc: "You carry a strong call toward education and the formation of young people. The IJ Sisters have shaped generations of Singapore Catholics through their schools and mission in Asia. You have a nurturing heart that desires to form faith in others, with a love for teaching, spiritual accompaniment, and the Church's mission across this region.",
+    sg: "The IJ Sisters run the beloved CHIJ schools across Singapore — their educational charism has formed countless Singapore Catholics for over a century."
+  },
+  OD: {
+    name: "Opus Dei",
+    gender: ["M", "F"],
+    desc: "You are called to sanctify the world from within — in your workplace, your studies, your Monday-to-Friday life. Opus Dei's charism is the sanctification of ordinary work. You likely are professionally-minded, intellectually serious, and believe deeply that holiness is achievable in the middle of the world, not apart from it.",
+    sg: "Opus Dei has an active presence in Singapore with centres offering formation for professionals, university students, and working adults."
+  },
+  SJ: {
+    name: "Society of Jesus (Jesuits)",
+    gender: ["M"],
+    desc: "You are drawn to the Jesuit magis — always seeking more, deeper, further. You likely have an intellectual hunger, love the art of discernment, and feel pulled toward the universal apostolic mission of the Church. The Jesuits are contemplatives in action — philosophers and missionaries, formed through the rigorous Spiritual Exercises of St Ignatius.",
+    sg: "The Jesuits are present in Singapore at Sacred Heart Church and through various apostolic works, intellectual formation programmes, and retreat ministry."
+  },
+  OFM: {
+    name: "Order of Friars Minor (Franciscans)",
+    gender: ["M", "F"],
+    desc: "You are drawn to simplicity, evangelical poverty, and fraternal joy. St Francis's spirituality resonates deeply in your soul — the beauty of creation, radical care for the poor, and detachment from all that is not God. You have a joyful communal spirit and feel called to live the Gospel without compromise, in a spirit of universal brotherhood and sisterhood.",
+    sg: "The Franciscan friars and sisters are present in Singapore with a charism of simplicity, fraternal joy, and apostolic service to all."
+  },
+  LS: {
+    name: "De La Salle Brothers",
+    gender: ["M"],
+    desc: "You feel an unmistakable call to education — especially the formation of young men, particularly those from underprivileged backgrounds. The De La Salle Brothers have shaped Singapore's Catholic education through SJI and beyond. You carry a gift for teaching, forming young people in faith and character, and living in fraternal community with fellow Brothers.",
+    sg: "The La Salle Brothers run St Joseph's Institution (SJI) and have been pillars of Catholic education and formation in Singapore for generations."
+  },
+  DIO: {
+    name: "Diocesan Priesthood",
+    gender: ["M"],
+    desc: "You feel called to be a shepherd of God's people — to celebrate the sacraments, break open the Word, and accompany a parish community through every season of life. The diocesan priest belongs to a local Church, serves under his bishop, and gives himself wholly to the people entrusted to his pastoral care.",
+    sg: "The Archdiocese of Singapore actively calls men to the diocesan priesthood to serve her growing, diverse, and vibrant Catholic community."
+  },
+  CEN: {
+    name: "Cenacle Sisters",
+    gender: ["F"],
+    desc: "You are drawn to the ministry of retreat and inner renewal — creating space where others can encounter God in silence, depth, and genuine transformation. The Cenacle Sisters carry a beautiful charism of Ignatian spirituality, spiritual direction, and retreat ministry. You likely have gifts for deep listening, patient accompaniment, and holding sacred space for the souls entrusted to you.",
+    sg: "The Cenacle Sisters have offered retreat ministry and spiritual accompaniment to Singapore Catholics for many years, nurturing countless vocations and deepening faith."
+  },
+  SIN: {
+    name: "Consecrated Single Life",
+    gender: ["M", "F"],
+    desc: "You feel called to total availability for God and neighbour — without the bonds of religious vows or the covenant of marriage. The consecrated single life is a free and generous self-offering, expressed through your work, ministry, and daily witness. You value freedom, flexibility, and the capacity to serve wherever the need is greatest.",
+    sg: "Many Singapore Catholics live rich apostolic lives as consecrated singles — serving through parishes, Catholic movements, and professional apostolates throughout the city."
+  },
+  MAR: {
+    name: "Holy Matrimony",
+    gender: ["M", "F"],
+    desc: "You are called to love and be loved in the covenant of marriage — to build a domestic church with a spouse, and perhaps to raise children in the faith. Marriage is not a lesser vocation but a profound sacrament: a path to holiness forged through self-giving love, day after day. Your home becomes a school of virtue and an icon of Christ's faithful love for the Church.",
+    sg: "The Church in Singapore deeply treasures Catholic marriage and family life as the essential foundation of a holy, flourishing, and vibrant society."
+  },
+  OP: {
+    name: "Order of Preachers (Dominicans)",
+    gender: ["M", "F"],
+    desc: "You are drawn to Veritas — Truth — and to the ancient Dominican call to share with others what you have contemplated. St Dominic founded his Order not in a cloister but on the road, preaching to those who had lost the faith. You likely have a sharp intellectual hunger, love theological depth, and feel that study and prayer are not opposites but a single act of love. The Dominican rhythm of communal prayer, serious study, and apostolic preaching resonates with something deep in you.",
+    sg: "The Dominicans are present in Singapore, carrying their eight-century charism of Truth, beauty, and the preached Word into the heart of this city."
+  }
+};
+
+/* ════════════════════════════════════════
+   QUESTIONS
+════════════════════════════════════════ */
+const QQ = [
+  {
+    ctx: "Saturday morning",
+    txt: "You wake up with an unexpectedly free Saturday. Without planning it, you end up\u2026",
+    opts: [
+      { t: "Making kopi and sitting in silence for an hour before the day starts \u2014 you\u2019re almost annoyed when it ends", s: { VD:3, CEN:4, IJ:2 } },
+      { t: "Texting friends to gather for breakfast, then improvising the rest of the day together", s: { OFM:3, MAR:2, DIO:2 } },
+      { t: "Back at your desk by 9am \u2014 there\u2019s a project that won\u2019t leave your mind", s: { SJ:3, OD:3, LS:2, OP:2 } },
+      { t: "Already out the door for a volunteer shift or to visit someone who\u2019s been on your heart", s: { CGS:3, LS:3, DIO:2 } }
+    ]
+  },
+  {
+    ctx: "The St Francis moment",
+    txt: "St Francis, the wealthy merchant\u2019s son, stripped off his fine clothes in the town square and handed them back to his father. If you had to make one equally radical, public gesture of total surrender in Singapore today, it would be\u2026",
+    opts: [
+      { t: "Giving away a significant portion of your savings and downgrading to the simplest possible life", s: { OFM:4, VD:2, CGS:2 } },
+      { t: "Walking away from your career track and going to serve somewhere nobody glamorous would go", s: { CGS:3, LS:3, DIO:2 } },
+      { t: "Telling your boss at your next appraisal that your faith now shapes your priorities more than your KPIs", s: { OD:4, SJ:2 } },
+      { t: "Proposing to the person you love \u2014 committing your whole self, publicly and permanently", s: { MAR:4, SIN:2 } }
+    ]
+  },
+  {
+    ctx: "The hawker centre order \U0001f35c",
+    txt: "Okay, be honest: what\u2019s your usual hawker centre order? (This is spiritually very important.)",
+    opts: [
+      { t: "Yong tau foo \u2014 you choose each ingredient carefully. Nothing goes in by default", s: { SJ:3, OD:3, OP:3 } },
+      { t: "Cai fan / economy rice \u2014 you take what\u2019s available and cheerfully share the table with strangers", s: { OFM:3, CGS:2, LS:2 } },
+      { t: "Laksa \u2014 rich, full-bodied, deeply rooted, and absolutely not for the faint-hearted", s: { DIO:3, MAR:2 } },
+      { t: "Kaya toast and kopi-O \u2014 simple, timeless, and you genuinely think this is enough for a happy life", s: { VD:3, CEN:3, OFM:2 } }
+    ]
+  },
+  {
+    ctx: "The party conversation",
+    txt: "You\u2019re at a social gathering and you end up in the longest, most energising conversation of the evening with\u2026",
+    opts: [
+      { t: "A PhD student in philosophy who wants to debate consciousness, free will, and whether faith is rational", s: { SJ:4, OD:2, OP:4 } },
+      { t: "A social worker who has seen parts of Singapore most people don\u2019t know exist", s: { CGS:3, OFM:3, LS:2 } },
+      { t: "A couple who\u2019ve been married 40 years and still finish each other\u2019s sentences", s: { MAR:4, DIO:2 } },
+      { t: "A ten-year-old who asks you more interesting questions than most adults", s: { LS:4, IJ:4 } }
+    ]
+  },
+  {
+    ctx: "The Ignatius examination",
+    txt: "St Ignatius asked himself three questions: \u201cWhat have I done for Christ? What am I doing for Christ? What ought I to do?\u201d When you sit quietly with these questions, what moves in you?",
+    opts: [
+      { t: "The third question feels alive and urgent \u2014 something more, something bolder, is being asked", s: { SJ:3, OFM:3, VD:3 } },
+      { t: "The answer to all three is the same: love the people who are already in my life, better and more faithfully", s: { MAR:4, OD:3 } },
+      { t: "A longing for structure and community \u2014 you want a Rule, a rhythm, others to discern alongside", s: { DIO:3, CEN:3, IJ:2 } },
+      { t: "Restlessness \u2014 you\u2019re not sure what\u2019s being asked but you know you haven\u2019t answered yet", s: { SIN:3, SJ:2, OFM:2 } }
+    ]
+  },
+  {
+    ctx: "De La Salle\u2019s students",
+    txt: "St John Baptist de La Salle left a wealthy family and a promising Church career to educate children nobody else would teach. The \u201cnobody else would\u201d is the key. In Singapore, whose formation would you insist on even if everyone else had given up?",
+    opts: [
+      { t: "Kids at the most chaotic neighbourhood schools \u2014 the ones quietly written off by the system", s: { LS:5, IJ:2, CGS:2 } },
+      { t: "Women who have been told, and have begun to believe, that they are beyond redemption", s: { CGS:5, OFM:2 } },
+      { t: "Burned-out executives who are too proud and too busy to think they need anything", s: { OD:4, SJ:3, CEN:2 } },
+      { t: "Young adults who have quietly left the faith and feel that the Church has nothing left to say to them", s: { VD:3, DIO:3, CEN:3, OP:4 } }
+    ]
+  },
+  {
+    ctx: "Free afternoon in Singapore",
+    txt: "A rare free weekday afternoon \u2014 no obligations. You find yourself drawn to\u2026",
+    opts: [
+      { t: "MacRitchie Reservoir or Sungei Buloh \u2014 trees, water, and quiet. Something opens up in you here", s: { OFM:3, VD:3, CEN:2 } },
+      { t: "The National Library or a bookshop \u2014 ideas, good coffee, and three hours that disappear fast", s: { SJ:4, OD:3, OP:4 } },
+      { t: "Visiting a friend or family member who\u2019s been on your mind and probably needs company", s: { MAR:3, DIO:3, IJ:2 } },
+      { t: "Geylang, Tekka Market, or Chinatown \u2014 the unpolished edges of Singapore fascinate and move you", s: { CGS:3, OFM:3, LS:2 } }
+    ]
+  },
+  {
+    ctx: "The Escriv\u00e1 provocation",
+    txt: "St Josmaria Escriv\u00e1 said a surgeon who operates with love may be offering God a more perfect prayer than a distracted monk at his psalms. When you hear this\u2026",
+    opts: [
+      { t: "Something clicks \u2014 your work already feels like an offering when you do it well and for the right reasons", s: { OD:4, MAR:2, SIN:2 } },
+      { t: "You\u2019re moved, but restless \u2014 you want the surgery and the psalms, and you don\u2019t want to choose", s: { SJ:3, DIO:3, OP:4 } },
+      { t: "You understand it, but still feel drawn to a life more formally structured around prayer", s: { VD:3, CEN:3, OFM:3 } },
+      { t: "You feel it reframe your entire week \u2014 the commute, the emails, the lunch queue. All of it becomes possible", s: { OD:4, SIN:3 } }
+    ]
+  },
+  {
+    ctx: "Someone crying on the MRT",
+    txt: "Peak hour on the North-South Line. A stranger across the aisle is crying quietly \u2014 trying not to be noticed. You\u2026",
+    opts: [
+      { t: "Feel an almost physical pull toward them that you can\u2019t explain and can\u2019t quite ignore", s: { CGS:4, VD:3, CEN:3 } },
+      { t: "Observe carefully, read the situation, then make a deliberate and considered move", s: { SJ:4, CEN:2, OP:3 } },
+      { t: "Are already next to them before you\u2019ve consciously decided \u2014 your heart got there before your head", s: { OFM:3, DIO:3, IJ:2 } },
+      { t: "Say a quiet prayer for them and trust that God is already with them, whether or not you intervene", s: { MAR:2, OD:3, SIN:2, VD:2 } }
+    ]
+  },
+  {
+    ctx: "The promotion",
+    txt: "A mentor offers you a significant promotion \u2014 more money, more status, a nicer address. Something in you hesitates. That hesitation is because\u2026",
+    opts: [
+      { t: "You\u2019re not sure this makes you more free \u2014 and something in you prizes freedom above security", s: { SJ:3, OFM:3, VD:3 } },
+      { t: "It would move you further from the people you most want to serve and be near", s: { CGS:3, LS:3, DIO:2 } },
+      { t: "You\u2019re picturing the effect on a future family \u2014 and the maths don\u2019t add up the way you\u2019d want", s: { MAR:4 } },
+      { t: "Your best self doesn\u2019t belong in a place that measures worth in titles and square footage", s: { SIN:3, CEN:2, OFM:2 } }
+    ]
+  },
+  {
+    ctx: "When God felt most real",
+    txt: "Think of the moment God felt most undeniably real and present to you. It happened\u2026",
+    opts: [
+      { t: "In deep prayer or silence \u2014 a moment that was luminous in a way you still can\u2019t fully explain", s: { VD:4, CEN:4 } },
+      { t: "Through a particular person \u2014 their love revealed something about God you hadn\u2019t grasped before", s: { MAR:4, DIO:2 } },
+      { t: "When someone you\u2019d almost stopped hoping for made a genuine and unexpected turn toward life", s: { CGS:4, LS:3, OFM:2 } },
+      { t: "When faith and reason finally resolved \u2014 an intellectual clarity that felt like grace", s: { SJ:4, OD:3, OP:4 } }
+    ]
+  },
+  {
+    ctx: "The room you\u2019re cleaning",
+    txt: "You\u2019re tidying your room and you notice how much you own. Your gut response, honestly, is\u2026",
+    opts: [
+      { t: "A familiar pang \u2014 you\u2019d genuinely be freer with less, and you feel a pull to give things away again", s: { OFM:4, VD:3, CGS:2 } },
+      { t: "A mild guilt you quickly set aside \u2014 you need these things, and providing for your future family is good", s: { MAR:3, OD:2 } },
+      { t: "Genuine curiosity \u2014 you\u2019ve wondered before whether you could actually own almost nothing. Could you?", s: { SJ:3, SIN:3 } },
+      { t: "Nothing unusual. You already live pretty simply and this doesn\u2019t trouble you much either way", s: { DIO:2, CEN:2, IJ:2 } }
+    ]
+  },
+  {
+    ctx: "What lights you on fire \U0001f525",
+    txt: "St Ignatius described a particular kind of fire \u2014 a spiritual consolation \u2014 that he felt when reading about the saints. What reliably puts that fire in you?",
+    opts: [
+      { t: "The mystics \u2014 Francis, Th\u00e9r\u00e8se, John of the Cross, Teresa of \u00c1vila \u2014 their lives feel like a personal dare", s: { VD:3, CEN:3, OFM:3, OP:2 } },
+      { t: "The thought that an ordinary desk, classroom, or kitchen can become holy ground for a holy person", s: { OD:4, MAR:2 } },
+      { t: "Imagining a young person in Singapore encountering Jesus for the very first time and being changed by it", s: { LS:3, IJ:3, VD:2, DIO:2, OP:3 } },
+      { t: "The picture of a family \u2014 a real, imperfect, loving, sacramental family \u2014 being a light to the world", s: { MAR:4, DIO:2 } }
+    ]
+  },
+  {
+    ctx: "National Discernment Day \U0001f1f8\U0001f1ec",
+    txt: "Singapore announces a National Discernment Day. One full day off, no screens, do whatever your soul needs. You spend it\u2026",
+    opts: [
+      { t: "On a self-imposed day of silence somewhere in Singapore \u2014 you\u2019ve secretly wanted an excuse to do this", s: { VD:4, CEN:4, SJ:2 } },
+      { t: "Doing something genuinely useful for someone who cannot and will not repay you", s: { CGS:3, OFM:3, LS:3 } },
+      { t: "In the longest, most honest conversation of your life with someone who challenges and stretches you", s: { SJ:3, OD:3, CEN:2, OP:4 } },
+      { t: "Cooking a slow meal for the people you love most \u2014 presence, laughter, no agenda", s: { MAR:4, DIO:2 } }
+    ]
+  },
+  {
+    ctx: "Mary Euphrasia\u2019s tenacity",
+    txt: "St Mary Euphrasia Pelletier, founder of the Good Shepherd Sisters, never gave up on a single person in her care \u2014 no matter how many times they fell. In your own life, you find it most natural to persist with\u2026",
+    opts: [
+      { t: "A person others have quietly stopped expecting anything from \u2014 you\u2019re still there", s: { CGS:5, OFM:2 } },
+      { t: "A question or truth you\u2019re trying to understand \u2014 you\u2019ll sit with it for years if you have to", s: { SJ:4, OD:2, OP:4 } },
+      { t: "The people you\u2019ve committed to \u2014 a friendship, a family, a covenant, through everything", s: { MAR:3, DIO:3 } },
+      { t: "A ministry or calling you believe God has placed in your hands, even when nothing seems to be working", s: { VD:3, SIN:3, IJ:2 } }
+    ]
+  },
+  {
+    ctx: "The group project",
+    txt: "You\u2019re in a committee or group project at your parish. Without planning it, people start treating you as the one who\u2026",
+    opts: [
+      { t: "Asks the uncomfortable question nobody else will say out loud, and names what\u2019s really going on", s: { SJ:4, CEN:3, OP:3 } },
+      { t: "Notices who\u2019s been left out, who\u2019s struggling, and quietly makes sure they\u2019re not left behind", s: { CGS:3, IJ:3, OFM:3 } },
+      { t: "Comes in the most prepared, raises the intellectual quality, and makes everyone else sharper", s: { SJ:3, OD:3, LS:3, OP:4 } },
+      { t: "People just seem to trust \u2014 they come to you with things that aren\u2019t on the agenda", s: { DIO:4, MAR:2, CEN:2 } }
+    ]
+  },
+  {
+    ctx: "HDB dreams \U0001f3e2",
+    txt: "Ignoring money entirely \u2014 your ideal living situation in Singapore is\u2026",
+    opts: [
+      { t: "A simple room in a shared house with people who are on mission together \u2014 the messiness and all", s: { OFM:3, VD:3, SJ:2, CGS:2, IJ:2, LS:2, CEN:2, OP:2 } },
+      { t: "A warm HDB flat with children\u2019s drawings on the fridge and noise in the hallways at all hours", s: { MAR:5 } },
+      { t: "A thoughtfully arranged apartment \u2014 alone, but connected, with room to think, pray, and invite", s: { OD:3, SIN:3 } },
+      { t: "Somewhere within walking distance of a church \u2014 near the tabernacle and the needs of the parish", s: { DIO:3, CEN:2 } }
+    ]
+  },
+  {
+    ctx: "The Th\u00e9r\u00e8se Couderc experience",
+    txt: "Th\u00e9r\u00e8se Couderc, founder of the Cenacle, said her deepest spiritual experience was a revelation of God\u2019s simple, radical goodness \u2014 that He is fundamentally and unconditionally good. You\u2019ve glimpsed this too. It happened most powerfully for you in\u2026",
+    opts: [
+      { t: "A moment of prayer that went still and luminous in a way you\u2019d find hard to describe to anyone", s: { VD:4, CEN:4, IJ:2 } },
+      { t: "The love of a particular person \u2014 their fidelity or tenderness showed you something about God\u2019s own", s: { MAR:4, DIO:2 } },
+      { t: "Watching someone the world had written off find their dignity again", s: { CGS:4, LS:3 } },
+      { t: "A moment of intellectual or spiritual clarity that felt less like thinking and more like receiving", s: { SJ:3, OD:3, VD:2, OP:4 } }
+    ]
+  },
+  {
+    ctx: "The full picture of a good day",
+    txt: "Describe a truly good day \u2014 one that left you feeling you\u2019d lived the right way. At its centre was\u2026",
+    opts: [
+      { t: "A long uninterrupted stretch of prayer or Scripture \u2014 everything else that day felt lighter because of it", s: { VD:4, CEN:4 } },
+      { t: "Teaching, mentoring, or walking with someone \u2014 watching them understand something they couldn\u2019t before", s: { LS:3, IJ:3, SJ:3, OP:3 } },
+      { t: "Being genuinely and urgently needed by someone who had nobody else to go to", s: { CGS:4, DIO:3, OFM:2 } },
+      { t: "A slow meal with people you love \u2014 full presence, real conversation, no rush to be anywhere else", s: { MAR:4, OD:2 } }
+    ]
+  },
+  {
+    ctx: "The Jeremiah moment",
+    txt: "God says to you, as to Jeremiah: \u201cBefore I formed you in the womb, I knew you.\u201d Sitting with that \u2014 truly sitting with it \u2014 the response that rises in you is\u2026",
+    opts: [
+      { t: "\u201cThen take all of me. Structure it, consecrate it, hold me to it \u2014 I don\u2019t want to hold anything back.\u201d", s: { VD:3, SJ:3, OFM:3, IJ:3, CEN:3, CGS:3, DIO:3, LS:3, OP:3 } },
+      { t: "\u201cThen let me love one person the way You love \u2014 faithfully, permanently, and beyond what I can see.\u201d", s: { MAR:5 } },
+      { t: "\u201cThen keep me light. Keep me available. Don\u2019t let me get so settled that I can\u2019t be sent.\u201d", s: { SIN:5 } },
+      { t: "\u201cThen let every ordinary thing I touch become prayer. Let the world itself be my monastery.\u201d", s: { OD:4, SIN:2 } }
+    ]
+  }
+];
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+let gender = null, qIdx = 0, picked = null;
+const chosen = [];
+let scores = {};
+
+/* ════════════════════════════════════════
+   GENDER
+════════════════════════════════════════ */
+function pickGender(btn) {
+  gender = btn.dataset.g;
+  document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  document.getElementById('start-btn').classList.add('on');
+}
+
+/* ════════════════════════════════════════
+   START QUIZ
+════════════════════════════════════════ */
+function startQuiz() {
+  if (!gender) return;
+  Object.keys(VOC).forEach(k => scores[k] = 0);
+  qIdx = 0; picked = null; chosen.length = 0;
+  show('quiz'); renderQ();
+}
+
+/* ════════════════════════════════════════
+   RENDER QUESTION
+════════════════════════════════════════ */
+function renderQ() {
+  const q   = QQ[qIdx];
+  const tot = QQ.length;
+  const pct = Math.round((qIdx + 1) / tot * 100);
+  const labels = ['A','B','C','D'];
+
+  document.getElementById('q-counter').textContent = 'Question ' + (qIdx + 1) + ' of ' + tot;
+  document.getElementById('q-pct').textContent     = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('q-ctx').textContent     = q.ctx;
+  document.getElementById('q-txt').textContent     = q.txt;
+
+  const wrap = document.getElementById('ans-wrap');
+  wrap.innerHTML = '';
+  q.opts.forEach(function(opt, i) {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn' + (chosen[qIdx] === i ? ' sel' : '');
+    btn.innerHTML = '<span class="ans-ltr">' + labels[i] + '</span><span>' + opt.t + '</span>';
+    btn.onclick = function() { pickAns(i, btn); };
+    wrap.appendChild(btn);
+  });
+
+  picked = (chosen[qIdx] !== undefined) ? chosen[qIdx] : null;
+  const nb = document.getElementById('next-btn');
+  nb.classList.toggle('on', picked !== null);
+
+  const isLast = qIdx === QQ.length - 1;
+  document.getElementById('next-lbl').textContent = isLast ? 'See My Results \u2192' : 'Next \u2192';
+}
+
+function pickAns(i, btn) {
+  document.querySelectorAll('.ans-btn').forEach(function(b) { b.classList.remove('sel'); });
+  btn.classList.add('sel');
+  picked = i;
+  document.getElementById('next-btn').classList.add('on');
+}
+
+function advance() {
+  if (picked === null) return;
+  chosen[qIdx] = picked;
+  if (qIdx === QQ.length - 1) { calcResults(); }
+  else { qIdx++; picked = null; show('quiz'); renderQ(); }
+}
+
+/* ════════════════════════════════════════
+   CALCULATE RESULTS
+════════════════════════════════════════ */
+function calcResults() {
+  Object.keys(VOC).forEach(function(k) { scores[k] = 0; });
+
+  chosen.forEach(function(ansIdx, qI) {
+    const s = QQ[qI].opts[ansIdx].s;
+    Object.keys(s).forEach(function(k) {
+      if (scores[k] !== undefined) scores[k] += s[k];
+    });
+  });
+
+  const eligible = Object.keys(VOC).filter(function(k) { return VOC[k].gender.indexOf(gender) !== -1; });
+  const ranked   = eligible.slice().sort(function(a, b) { return scores[b] - scores[a]; });
+  const top3     = ranked.slice(0, 3);
+  const maxScore = scores[top3[0]] || 1;
+
+  show('results');
+  /* Write hash so the share URL is ready */
+  var hash = '#r=' + gender + '.' + top3.join('.');
+  history.replaceState(null, '', hash);
+  buildResults(top3, maxScore);
+}
+
+/* ════════════════════════════════════════
+   BUILD RESULTS
+════════════════════════════════════════ */
+function buildResults(top3, maxScore) {
+  currentTop3 = top3;
+  var wrap = document.getElementById('res-wrap');
+  wrap.innerHTML = '';
+
+  const rankLabels = [
+    '\u2726 Your Strongest Resonance',
+    '\u2726 Also Calling to You',
+    '\u2726 Worth Discerning'
+  ];
+
+  top3.forEach(function(key, i) {
+    const v   = VOC[key];
+    const pct = Math.round(scores[key] / maxScore * 100);
+
+    const div = document.createElement('div');
+    div.className = 'voc-card';
+    div.innerHTML =
+      '<p class="voc-rank">' + rankLabels[i] + '</p>' +
+      '<p class="voc-name">' + v.name + '</p>' +
+      '<div class="bar-track"><div class="bar-fill" data-w="' + pct + '" style="width:0%"></div></div>' +
+      '<p class="voc-desc">' + v.desc + '</p>' +
+      '<p class="voc-sg">\uD83C\uDDF8\uD83C\uDDEC ' + v.sg + '</p>';
+    wrap.appendChild(div);
+  });
+
+  setTimeout(function() {
+    document.querySelectorAll('.bar-fill').forEach(function(b) {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 400);
+
+  /* Update share link display */
+  var shareUrl = buildShareUrl();
+  var lu = document.getElementById('share-link-url');
+  if (lu) lu.textContent = shareUrl;
+
+  /* Generate story card preview asynchronously */
+  generateAndPreview(top3[0]);
+}
+
+/* ════════════════════════════════════════
+   SCREEN MANAGEMENT
+════════════════════════════════════════ */
+function show(name) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function restart() {
+  gender = null; qIdx = 0; picked = null; chosen.length = 0; scores = {};
+  currentTop3 = null; storyCanvas = null;
+  var img = document.getElementById('story-preview-img');
+  var ldr = document.getElementById('story-preview-loading');
+  if (img) { img.style.display = 'none'; img.src = ''; }
+  if (ldr) ldr.style.display = 'flex';
+  var lu = document.getElementById('share-link-url');
+  if (lu) lu.textContent = 'Building your link\u2026';
+  history.replaceState(null, '', window.location.pathname);
+  document.querySelectorAll('.gender-btn').forEach(function(b) { b.classList.remove('sel'); });
+  document.getElementById('start-btn').classList.remove('on');
+  show('welcome');
+}
+
+/* ════════════════════════════════════════
+   SHARING SYSTEM
+════════════════════════════════════════ */
+var storyCanvas = null;
+var currentTop3 = null;
+
+var VOC_TAGLINES = {
+  VD:  'Called to the Living Word \u2022 Called to Community',
+  CGS: 'Called to seek every last lost sheep',
+  IJ:  'Called to form the faith of a new generation',
+  OD:  'Called to sanctify every ordinary moment',
+  SJ:  'Called to the magis \u2014 always more, always deeper',
+  OFM: 'Called to poverty, joy & fraternal simplicity',
+  LS:  'Called to reach those no one else would teach',
+  DIO: 'Called to be a shepherd of my people',
+  CEN: 'Called to create sacred space for God to work',
+  SIN: 'Called to be free and fully available',
+  MAR: 'Called to love one person with my whole self',
+  OP:  'Veritas \u2014 Called to contemplate and to preach'
+};
+
+/* ── Canvas Story Card ── */
+async function drawStoryCanvas(vocKey) {
+  await document.fonts.ready;
+  var W = 1080, H = 1920;
+  var cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  var c = cv.getContext('2d');
+
+  /* Background */
+  var bg = c.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0,    '#fdf9f2');
+  bg.addColorStop(0.45, '#f5edd8');
+  bg.addColorStop(1,    '#ede3cc');
+  c.fillStyle = bg; c.fillRect(0, 0, W, H);
+
+  /* Centre glow */
+  var gl = c.createRadialGradient(W/2, H*0.42, 0, W/2, H*0.42, 820);
+  gl.addColorStop(0, 'rgba(201,168,76,0.09)');
+  gl.addColorStop(1, 'transparent');
+  c.fillStyle = gl; c.fillRect(0, 0, W, H);
+
+  /* Gold top/bottom bars */
+  c.fillStyle = '#c9a84c';
+  c.fillRect(0, 0, W, 14);
+  c.fillRect(0, H - 14, W, 14);
+
+  /* Inner border rectangle */
+  c.strokeStyle = 'rgba(201,168,76,0.28)';
+  c.lineWidth = 2;
+  c.strokeRect(54, 54, W - 108, H - 108);
+
+  /* Corner ornaments at inner border */
+  var cornerSize = 40;
+  [
+    [54, 54], [W - 54, 54], [54, H - 54], [W - 54, H - 54]
+  ].forEach(function(pt) {
+    c.beginPath();
+    c.arc(pt[0], pt[1], 5, 0, Math.PI * 2);
+    c.fillStyle = '#c9a84c'; c.fill();
+  });
+
+  /* Helpers */
+  function goldenLine(y, x1, x2) {
+    x1 = x1 !== undefined ? x1 : 200; x2 = x2 !== undefined ? x2 : W - 200;
+    var lg = c.createLinearGradient(x1, 0, x2, 0);
+    lg.addColorStop(0, 'transparent');
+    lg.addColorStop(0.5, '#c9a84c');
+    lg.addColorStop(1, 'transparent');
+    c.beginPath(); c.strokeStyle = lg; c.lineWidth = 1.5;
+    c.moveTo(x1, y); c.lineTo(x2, y); c.stroke();
+  }
+
+  function wrapText(text, x, y, maxW, lineH) {
+    var words = text.split(' '), line = '', curY = y;
+    for (var i = 0; i < words.length; i++) {
+      var test = line + words[i] + ' ';
+      if (c.measureText(test).width > maxW && i > 0) {
+        c.fillText(line.trim(), x, curY);
+        line = words[i] + ' '; curY += lineH;
+      } else line = test;
+    }
+    c.fillText(line.trim(), x, curY);
+    return curY;
+  }
+
+  function rRect(x, y, w, h, r) {
+    c.beginPath();
+    c.moveTo(x + r, y); c.lineTo(x + w - r, y);
+    c.arcTo(x + w, y, x + w, y + r, r);
+    c.lineTo(x + w, y + h - r);
+    c.arcTo(x + w, y + h, x + w - r, y + h, r);
+    c.lineTo(x + r, y + h);
+    c.arcTo(x, y + h, x, y + h - r, r);
+    c.lineTo(x, y + r);
+    c.arcTo(x, y, x + r, y, r);
+    c.closePath();
+  }
+
+  /* Draw ornamental cross (top branding) */
+  function drawCross(cx, cy, armLen, weight) {
+    c.save();
+    c.strokeStyle = '#c9a84c';
+    c.lineWidth = weight || 5;
+    c.lineCap = 'round';
+    var gap = 16;
+    /* horizontal */
+    c.beginPath(); c.moveTo(cx - armLen, cy); c.lineTo(cx - gap, cy); c.stroke();
+    c.beginPath(); c.moveTo(cx + gap, cy);     c.lineTo(cx + armLen, cy); c.stroke();
+    /* vertical */
+    c.beginPath(); c.moveTo(cx, cy - armLen); c.lineTo(cx, cy - gap); c.stroke();
+    c.beginPath(); c.moveTo(cx, cy + gap);     c.lineTo(cx, cy + armLen); c.stroke();
+    /* Centre gem */
+    c.beginPath(); c.arc(cx, cy, 9, 0, Math.PI*2); c.fillStyle = '#c9a84c'; c.fill();
+    /* Terminal dots */
+    [[cx - armLen, cy],[cx + armLen, cy],[cx, cy - armLen],[cx, cy + armLen]].forEach(function(p) {
+      c.beginPath(); c.arc(p[0], p[1], 5, 0, Math.PI*2); c.fillStyle = '#c9a84c'; c.fill();
+    });
+    c.restore();
+  }
+
+  c.textAlign = 'center'; c.textBaseline = 'middle';
+
+  /* ── TOP ORNAMENT ── */
+  drawCross(W/2, 200, 55, 5);
+
+  c.fillStyle = 'rgba(201,168,76,0.5)';
+  c.font = '38px sans-serif';
+  c.fillText('\u2726', W/2 - 130, 200);
+  c.fillText('\u2726', W/2 + 130, 200);
+
+  /* ── BRAND ── */
+  c.fillStyle = '#1a2744';
+  c.font = '600 90px Cinzel, serif';
+  c.fillText('CALLED & SENT', W/2, 360);
+
+  c.fillStyle = '#8a7a68';
+  c.font = 'italic 42px "Cormorant Garamond", serif';
+  c.fillText('Singapore Catholic Vocation Quiz', W/2, 450);
+
+  goldenLine(510);
+
+  /* ── RESULT LABEL ── */
+  c.fillStyle = '#c9a84c';
+  c.font = '400 32px Cinzel, serif';
+  c.fillText('MY VOCATION MAY BE', W/2, 600);
+
+  /* ── VOCATION NAME ── */
+  var v = VOC[vocKey];
+  c.fillStyle = '#1a2744';
+  c.font = '600 116px "Cormorant Garamond", serif';
+  var nameBottom = wrapText(v.name, W/2, 770, W - 160, 138);
+
+  /* ── TAGLINE ── */
+  c.fillStyle = '#6b5a44';
+  c.font = 'italic 50px "Cormorant Garamond", serif';
+  var tagline = VOC_TAGLINES[vocKey] || '';
+  var tagBottom = wrapText(tagline, W/2, nameBottom + 130, W - 200, 70);
+
+  /* ── CENTRE CROSS ORNAMENT ── */
+  var midY = Math.max(tagBottom + 160, 1270);
+  drawCross(W/2, midY, 52, 4);
+
+  goldenLine(midY + 110, 220, W - 220);
+
+  /* ── CTA ── */
+  var ctaTop = midY + 185;
+  c.fillStyle = '#1a2744';
+  c.font = '500 52px Cinzel, serif';
+  c.fillText('WHAT IS YOUR VOCATION?', W/2, ctaTop);
+
+  c.fillStyle = '#8a7a68';
+  c.font = 'italic 46px "Cormorant Garamond", serif';
+  c.fillText('Take the quiz and discover your calling', W/2, ctaTop + 92);
+
+  /* URL pill */
+  var urlY = ctaTop + 215;
+  c.fillStyle = 'rgba(201,168,76,0.12)';
+  rRect(220, urlY - 48, W - 440, 96, 8); c.fill();
+  c.strokeStyle = 'rgba(201,168,76,0.5)'; c.lineWidth = 2;
+  rRect(220, urlY - 48, W - 440, 96, 8); c.stroke();
+  c.fillStyle = '#c9a84c';
+  c.font = '500 38px Cinzel, serif';
+  var dispUrl = window.location.hostname + (window.location.pathname !== '/' ? window.location.pathname : '');
+  c.fillText(dispUrl, W/2, urlY);
+
+  /* ── BOTTOM ORNAMENT ── */
+  drawCross(W/2, H - 160, 40, 4);
+  c.fillStyle = 'rgba(201,168,76,0.45)';
+  c.font = '34px sans-serif';
+  c.fillText('\u2726', W/2 - 110, H - 160);
+  c.fillText('\u2726', W/2 + 110, H - 160);
+
+  return cv;
+}
+
+/* ── Generate preview after results render ── */
+async function generateAndPreview(vocKey) {
+  try {
+    storyCanvas = await drawStoryCanvas(vocKey);
+    var img = document.getElementById('story-preview-img');
+    var ldr = document.getElementById('story-preview-loading');
+    if (img) {
+      img.src = storyCanvas.toDataURL('image/jpeg', 0.92);
+      img.style.display = 'block';
+    }
+    if (ldr) ldr.style.display = 'none';
+  } catch(e) {
+    console.error('Story card generation failed:', e);
+    var ldr2 = document.getElementById('story-preview-loading');
+    if (ldr2) ldr2.innerHTML = '<span style="font-family:Cinzel,serif;font-size:0.5rem;letter-spacing:0.15em;color:var(--muted);text-transform:uppercase;padding:1rem;">Preview unavailable</span>';
+  }
+}
+
+/* ── Download ── */
+async function downloadStory() {
+  showToast('Preparing image\u2026');
+  if (!storyCanvas) {
+    if (!currentTop3) return;
+    storyCanvas = await drawStoryCanvas(currentTop3[0]);
+  }
+  var link = document.createElement('a');
+  link.download = 'called-and-sent-vocation.png';
+  link.href = storyCanvas.toDataURL('image/png');
+  link.click();
+  setTimeout(function() {
+    showToast('\u2713 Saved! Open from camera roll to share to Instagram Stories');
+  }, 400);
+}
+
+/* ── Share (Web Share API) ── */
+async function shareNative() {
+  showToast('Preparing\u2026');
+  if (!storyCanvas) {
+    if (!currentTop3) return;
+    storyCanvas = await drawStoryCanvas(currentTop3[0]);
+  }
+  var shareUrl = buildShareUrl();
+  var vocName = VOC[currentTop3[0]] ? VOC[currentTop3[0]].name : 'a beautiful vocation';
+  var shareText = 'I just found out my vocation may be \u201c' + vocName + '\u201d \u2014 what\u2019s yours? Take the Called & Sent quiz!';
+
+  /* Try sharing with image file (works on iOS/Android → Instagram) */
+  if (navigator.share) {
+    try {
+      var dataUrl = storyCanvas.toDataURL('image/png');
+      var blob = await (await fetch(dataUrl)).blob();
+      var file = new File([blob], 'called-and-sent.png', { type: 'image/png' });
+      var shareData = { title: 'Called & Sent \u2014 Vocation Quiz', text: shareText, url: shareUrl };
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        shareData.files = [file];
+      }
+      await navigator.share(shareData);
+      return;
+    } catch(e) {
+      if (e.name === 'AbortError') { showToast(''); return; }
+      /* Fall through to download */
+    }
+  }
+  /* Desktop fallback: download the image */
+  downloadStory();
+}
+
+/* ── Copy link ── */
+function copyLink() {
+  var url = buildShareUrl();
+  var writeSuccess = function() {
+    document.getElementById('share-link-url').textContent = url;
+    showToast('\u2713 Link copied to clipboard!');
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(writeSuccess).catch(function() { fallbackCopy(url, writeSuccess); });
+  } else {
+    fallbackCopy(url, writeSuccess);
+  }
+}
+
+function fallbackCopy(text, cb) {
+  var ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+  document.body.appendChild(ta);
+  ta.focus(); ta.select();
+  try { document.execCommand('copy'); cb(); } catch(e) {}
+  document.body.removeChild(ta);
+}
+
+/* ── Build shareable URL with encoded result hash ── */
+function buildShareUrl() {
+  if (!currentTop3 || !gender) return window.location.href.split('#')[0];
+  var hash = '#r=' + gender + '.' + currentTop3.join('.');
+  return window.location.origin + window.location.pathname + hash;
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  var t = document.getElementById('share-toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._tid);
+  if (msg) showToast._tid = setTimeout(function() { t.classList.remove('show'); }, 3500);
+}
+
+/* ── Load results from URL hash (for shared links) ── */
+function loadFromHash() {
+  var hash = window.location.hash;
+  if (!hash.startsWith('#r=')) return;
+  var parts = hash.slice(3).split('.');
+  if (parts.length !== 4) return;
+  var g = parts[0], v1 = parts[1], v2 = parts[2], v3 = parts[3];
+  if (['M','F'].indexOf(g) === -1) return;
+  var keys = [v1, v2, v3];
+  if (!keys.every(function(k) { return !!VOC[k]; })) return;
+  if (!keys.every(function(k) { return VOC[k].gender.indexOf(g) !== -1; })) return;
+  gender = g;
+  show('results');
+  buildResults(keys, 100);
+}
+
+window.addEventListener('DOMContentLoaded', loadFromHash);
+</script>
+
+<!--
+  ════════════════════════════════════════════════════════
+  SHOPIFY HOSTING INSTRUCTIONS
+  ════════════════════════════════════════════════════════
+
+  OPTION A — Custom HTML Section (easiest, recommended)
+  ───────────────────────────────────────────────────────
+  1. Shopify Admin → Online Store → Themes → Customize
+  2. Open the page where you want the quiz
+  3. Click "Add section" → "Custom HTML"
+  4. Paste the ENTIRE contents of this file into the HTML field
+
+  OPTION B — Standalone Page with Custom Template
+  ───────────────────────────────────────────────────────
+  1. Shopify Admin → Online Store → Themes → Edit Code
+  2. Under "Templates", click "Add a new template"
+     → type: page  → name: vocation-quiz
+  3. Replace the template body with this file's full HTML
+     (You can remove the Shopify header/footer liquid tags
+      if you want a fullscreen, distraction-free experience)
+  4. Shopify Admin → Online Store → Pages → Add Page
+  5. Set Template suffix = "page.vocation-quiz", then Save & Publish
+
+  OPTION C — iframe Embed (if hosting this file externally)
+  ───────────────────────────────────────────────────────
+  <iframe src="YOUR_HOSTED_URL"
+    style="width:100%; min-height:950px; border:none;">
+  </iframe>
+
+  ════════════════════════════════════════════════════════
+-->
+</body>
+</html>
+
