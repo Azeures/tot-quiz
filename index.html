@@ -428,6 +428,66 @@
       font-style: italic; font-size: 0.82rem;
       color: var(--muted); margin-top: 0.6rem;
     }
+    .tot-credit {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.88rem;
+      color: var(--muted); margin-top: 1.75rem;
+      line-height: 1.75;
+    }
+    .tot-credit a {
+      color: var(--gold); text-decoration: none;
+      border-bottom: 1px solid rgba(201,168,76,0.35);
+      transition: border-color 0.2s;
+    }
+    .tot-credit a:hover { border-color: var(--gold); }
+
+    /* ── shared landing screen ── */
+    #screen-shared .card { padding: 3rem 3.5rem 2.75rem; text-align: center; }
+    .shared-eyebrow {
+      font-family: 'Cinzel', serif;
+      font-size: 0.62rem; letter-spacing: 0.25em;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 0.5rem; opacity: 0.85;
+    }
+    .shared-voc-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 600; color: var(--gold-light);
+      line-height: 1.2; margin-bottom: 0.5rem;
+    }
+    .shared-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.1rem;
+      color: var(--muted); margin-bottom: 0;
+    }
+    .shared-prompt {
+      font-size: 1.18rem; line-height: 1.8;
+      color: rgba(245,239,227,0.82);
+      max-width: 500px; margin: 0 auto 2rem;
+    }
+    .shared-cta-row { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .shared-cta-btn {
+      font-family: 'Cinzel', serif;
+      font-size: 0.68rem; letter-spacing: 0.22em;
+      text-transform: uppercase;
+      padding: 0.9rem 2.8rem;
+      background: var(--gold); color: var(--navy);
+      border: none; cursor: pointer; border-radius: 2px;
+      font-weight: 600; transition: all 0.3s ease;
+    }
+    .shared-cta-btn:hover {
+      background: var(--gold-light);
+      box-shadow: 0 8px 28px rgba(201,168,76,0.35);
+      transform: translateY(-2px);
+    }
+    .shared-see-results {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 0.95rem;
+      color: var(--muted); cursor: pointer;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+      transition: color 0.2s;
+    }
+    .shared-see-results:hover { color: var(--gold); }
 
     /* ── responsive ── */
     @media (max-width: 600px) {
@@ -524,7 +584,12 @@
             &#8595;&nbsp; Download Story Card
           </button>
           <button class="share-btn share-btn--gold" onclick="shareNative()">
-            &#10022;&nbsp; Share &amp; Invite Friends
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:2px">
+              <rect x="2" y="2" width="20" height="20" rx="5.5" ry="5.5" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="12" r="4.5" stroke="currentColor" stroke-width="2"/>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/>
+            </svg>
+            Share to Instagram Stories
           </button>
         </div>
 
@@ -534,7 +599,7 @@
           <button class="share-copy-btn" onclick="copyLink()">Copy Link</button>
         </div>
 
-        <p class="share-ig-note">On mobile, &ldquo;Share &amp; Invite&rdquo; lets you post your story card directly to Instagram Stories &nbsp;&#128247;</p>
+        <p class="share-ig-note">On mobile, &ldquo;Share to Instagram Stories&rdquo; opens the native share sheet so you can post directly to your IG story &nbsp;&#128247;</p>
         <p id="share-toast" class="share-toast"></p>
       </div>
 
@@ -546,7 +611,34 @@
           and attend a vocations evening at your parish or a religious community
           here in Singapore.
         </p>
+        <p class="tot-credit">
+          Made with &hearts; by <a href="https://theologyontap.sg" target="_blank" rel="noopener">Theology on Tap SG</a><br>
+          <span>Find out more about our events at <a href="https://theologyontap.sg" target="_blank" rel="noopener">theologyontap.sg</a></span>
+        </p>
       </div>
+    </div>
+  </div>
+
+  <!-- SHARED LANDING (visited from a shared link) -->
+  <div id="screen-shared" class="screen">
+    <div class="card">
+      <div class="ornament">&#10022; &nbsp; &#10022; &nbsp; &#10022;</div>
+      <p class="shared-eyebrow">A friend discovered their vocation&hellip;</p>
+      <h2 class="shared-voc-name" id="shared-voc-name"></h2>
+      <p class="shared-tagline" id="shared-tagline"></p>
+      <div class="divider"></div>
+      <p class="shared-prompt">
+        Could this be yours too? Or is God calling you somewhere different?<br>
+        Take the <em>Called &amp; Sent</em> quiz and find out &mdash; it only takes a few minutes.
+      </p>
+      <div class="shared-cta-row">
+        <button class="shared-cta-btn" onclick="startFromShared()">Discover My Vocation &rarr;</button>
+        <span class="shared-see-results" onclick="showSharedResults()">See their full result first</span>
+      </div>
+      <p class="tot-credit" style="margin-top:2rem;">
+        Made with &hearts; by <a href="https://theologyontap.sg" target="_blank" rel="noopener">Theology on Tap SG</a><br>
+        <span>Find out more about our events at <a href="https://theologyontap.sg" target="_blank" rel="noopener">theologyontap.sg</a></span>
+      </p>
     </div>
   </div>
 
@@ -585,7 +677,7 @@ const VOC = {
     name: "Society of Jesus (Jesuits)",
     gender: ["M"],
     desc: "You are drawn to the Jesuit magis — always seeking more, deeper, further. You likely have an intellectual hunger, love the art of discernment, and feel pulled toward the universal apostolic mission of the Church. The Jesuits are contemplatives in action — philosophers and missionaries, formed through the rigorous Spiritual Exercises of St Ignatius.",
-    sg: "The Jesuits are present in Singapore at Sacred Heart Church and through various apostolic works, intellectual formation programmes, and retreat ministry."
+    sg: "The Jesuits are present in Singapore at St Ignatius Church and through various apostolic works, intellectual formation programmes, and retreat ministry."
   },
   OFM: {
     name: "Order of Friars Minor (Franciscans)",
@@ -930,9 +1022,9 @@ function calcResults() {
   const maxScore = scores[top3[0]] || 1;
 
   show('results');
-  /* Write hash so the share URL is ready */
+  /* Write hash so the share URL is ready — silently skip if blocked by iframe policy */
   var hash = '#r=' + gender + '.' + top3.join('.');
-  history.replaceState(null, '', hash);
+  try { history.replaceState(null, '', hash); } catch(e) {}
   buildResults(top3, maxScore);
 }
 
@@ -974,7 +1066,14 @@ function buildResults(top3, maxScore) {
   /* Update share link display */
   var shareUrl = buildShareUrl();
   var lu = document.getElementById('share-link-url');
-  if (lu) lu.textContent = shareUrl;
+  if (lu) {
+    if (isIframePreview() && QUIZ_BASE_URL === '') {
+      lu.textContent = 'your-quiz-url.com' + shareUrl;
+      lu.title = 'Set QUIZ_BASE_URL in the code to generate real shareable links';
+    } else {
+      lu.textContent = shareUrl;
+    }
+  }
 
   /* Generate story card preview asynchronously */
   generateAndPreview(top3[0]);
@@ -998,7 +1097,7 @@ function restart() {
   if (ldr) ldr.style.display = 'flex';
   var lu = document.getElementById('share-link-url');
   if (lu) lu.textContent = 'Building your link\u2026';
-  history.replaceState(null, '', window.location.pathname);
+  try { history.replaceState(null, '', window.location.pathname); } catch(e) {}
   document.querySelectorAll('.gender-btn').forEach(function(b) { b.classList.remove('sel'); });
   document.getElementById('start-btn').classList.remove('on');
   show('welcome');
@@ -1180,22 +1279,24 @@ async function drawStoryCanvas(vocKey) {
   c.fillText('Take the quiz and discover your calling', W/2, ctaTop + 92);
 
   /* URL pill */
-  var urlY = ctaTop + 215;
-  c.fillStyle = 'rgba(201,168,76,0.12)';
-  rRect(220, urlY - 48, W - 440, 96, 8); c.fill();
-  c.strokeStyle = 'rgba(201,168,76,0.5)'; c.lineWidth = 2;
-  rRect(220, urlY - 48, W - 440, 96, 8); c.stroke();
+  var urlY = ctaTop + 220;
+  c.fillStyle = 'rgba(201,168,76,0.1)';
+  rRect(200, urlY - 52, W - 400, 104, 10); c.fill();
+  c.strokeStyle = 'rgba(201,168,76,0.45)'; c.lineWidth = 2;
+  rRect(200, urlY - 52, W - 400, 104, 10); c.stroke();
   c.fillStyle = '#c9a84c';
-  c.font = '500 38px Cinzel, serif';
+  c.font = '500 40px Cinzel, serif';
   var dispUrl = window.location.hostname + (window.location.pathname !== '/' ? window.location.pathname : '');
   c.fillText(dispUrl, W/2, urlY);
 
-  /* ── BOTTOM ORNAMENT ── */
-  drawCross(W/2, H - 160, 40, 4);
-  c.fillStyle = 'rgba(201,168,76,0.45)';
-  c.font = '34px sans-serif';
-  c.fillText('\u2726', W/2 - 110, H - 160);
-  c.fillText('\u2726', W/2 + 110, H - 160);
+  /* ── BOTTOM ORNAMENT ── simple diamonds only, well clear of URL pill ── */
+  var botY = urlY + 140;
+  goldenLine(botY - 30, 300, W - 300);
+  c.fillStyle = 'rgba(201,168,76,0.55)';
+  c.font = '40px sans-serif';
+  c.fillText('\u2726', W/2 - 80, botY + 30);
+  c.fillText('\u2726', W/2,      botY + 30);
+  c.fillText('\u2726', W/2 + 80, botY + 30);
 
   return cv;
 }
@@ -1218,6 +1319,36 @@ async function generateAndPreview(vocKey) {
   }
 }
 
+/* ── Configurable quiz base URL ─────────────────────────────────────────────
+   Set this to your Shopify page URL once deployed, e.g.:
+   var QUIZ_BASE_URL = 'https://quiz.theologyontap.sg';
+   Leave blank to auto-detect (works correctly on Shopify; shows hash-only in preview).
+─────────────────────────────────────────────────────────────────────────── */
+var QUIZ_BASE_URL = 'https://quiz.theologyontap.sg';
+
+/* ── Detect sandboxed / srcdoc iframe environment ── */
+function isIframePreview() {
+  try {
+    return window.location.href === 'about:srcdoc' ||
+           window.location.origin === 'null' ||
+           window.self !== window.top;
+  } catch(e) { return true; }
+}
+
+/* ── Build shareable URL with encoded result hash ── */
+function buildShareUrl() {
+  var hash = '';
+  if (currentTop3 && gender) {
+    hash = '#r=' + gender + '.' + currentTop3.join('.');
+  }
+  /* Use explicit base URL if configured */
+  if (QUIZ_BASE_URL) return QUIZ_BASE_URL + hash;
+  /* In iframe/srcdoc preview, return just the hash with a note */
+  if (isIframePreview()) return hash || '#';
+  /* Normal hosted page */
+  return window.location.origin + window.location.pathname + hash;
+}
+
 /* ── Download ── */
 async function downloadStory() {
   showToast('Preparing image\u2026');
@@ -1225,12 +1356,27 @@ async function downloadStory() {
     if (!currentTop3) return;
     storyCanvas = await drawStoryCanvas(currentTop3[0]);
   }
-  var link = document.createElement('a');
-  link.download = 'called-and-sent-vocation.png';
-  link.href = storyCanvas.toDataURL('image/png');
-  link.click();
+  var dataUrl = storyCanvas.toDataURL('image/png');
+
+  /* Try anchor download first */
+  var downloaded = false;
+  try {
+    var link = document.createElement('a');
+    link.download = 'called-and-sent-vocation.png';
+    link.href = dataUrl;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    downloaded = true;
+  } catch(e) { downloaded = false; }
+
+  /* Fallback: open in new tab so user can long-press / right-click to save */
+  if (!downloaded || isIframePreview()) {
+    try { window.open(dataUrl, '_blank'); } catch(e) {}
+  }
+
   setTimeout(function() {
-    showToast('\u2713 Saved! Open from camera roll to share to Instagram Stories');
+    showToast('\u2713 Story card ready \u2014 save it and post to your Instagram Story!');
   }, 400);
 }
 
@@ -1245,7 +1391,7 @@ async function shareNative() {
   var vocName = VOC[currentTop3[0]] ? VOC[currentTop3[0]].name : 'a beautiful vocation';
   var shareText = 'I just found out my vocation may be \u201c' + vocName + '\u201d \u2014 what\u2019s yours? Take the Called & Sent quiz!';
 
-  /* Try sharing with image file (works on iOS/Android → Instagram) */
+  /* Try Web Share API (works on iOS / Android) */
   if (navigator.share) {
     try {
       var dataUrl = storyCanvas.toDataURL('image/png');
@@ -1256,19 +1402,41 @@ async function shareNative() {
         shareData.files = [file];
       }
       await navigator.share(shareData);
+      showToast('\u2713 Shared!');
       return;
     } catch(e) {
       if (e.name === 'AbortError') { showToast(''); return; }
-      /* Fall through to download */
+      /* Share API failed — fall through */
     }
   }
-  /* Desktop fallback: download the image */
-  downloadStory();
+
+  /* Desktop fallback: open image in new tab with instructions */
+  try {
+    var win = window.open(storyCanvas.toDataURL('image/png'), '_blank');
+    if (win) {
+      showToast('Image opened \u2014 right-click \u2192 Save, then post to Instagram Stories');
+      return;
+    }
+  } catch(e) {}
+
+  /* Last resort: trigger download */
+  await downloadStory();
+  showToast('\u2713 Saved! Open from camera roll and post to your Instagram Story');
 }
 
 /* ── Copy link ── */
 function copyLink() {
   var url = buildShareUrl();
+  var displayUrl = url;
+
+  /* In preview mode, show a helpful placeholder */
+  if (isIframePreview() && QUIZ_BASE_URL === '') {
+    displayUrl = 'your-quiz-url.com' + url;
+    showToast('\u26a0 Set QUIZ_BASE_URL in the code for a real shareable link');
+    document.getElementById('share-link-url').textContent = displayUrl;
+    return;
+  }
+
   var writeSuccess = function() {
     document.getElementById('share-link-url').textContent = url;
     showToast('\u2713 Link copied to clipboard!');
@@ -1290,13 +1458,6 @@ function fallbackCopy(text, cb) {
   document.body.removeChild(ta);
 }
 
-/* ── Build shareable URL with encoded result hash ── */
-function buildShareUrl() {
-  if (!currentTop3 || !gender) return window.location.href.split('#')[0];
-  var hash = '#r=' + gender + '.' + currentTop3.join('.');
-  return window.location.origin + window.location.pathname + hash;
-}
-
 /* ── Toast ── */
 function showToast(msg) {
   var t = document.getElementById('share-toast');
@@ -1308,6 +1469,9 @@ function showToast(msg) {
 }
 
 /* ── Load results from URL hash (for shared links) ── */
+var sharedKeys = null;
+var sharedGender = null;
+
 function loadFromHash() {
   var hash = window.location.hash;
   if (!hash.startsWith('#r=')) return;
@@ -1318,45 +1482,47 @@ function loadFromHash() {
   var keys = [v1, v2, v3];
   if (!keys.every(function(k) { return !!VOC[k]; })) return;
   if (!keys.every(function(k) { return VOC[k].gender.indexOf(g) !== -1; })) return;
-  gender = g;
+
+  /* Store for later use */
+  sharedGender = g;
+  sharedKeys   = keys;
+  gender       = g;
+
+  /* Populate shared landing screen */
+  var vocName = VOC[keys[0]] ? VOC[keys[0]].name : '';
+  var vocTag  = VOC_TAGLINES[keys[0]] || '';
+  var nameEl  = document.getElementById('shared-voc-name');
+  var tagEl   = document.getElementById('shared-tagline');
+  if (nameEl) nameEl.textContent = vocName;
+  if (tagEl)  tagEl.textContent  = vocTag;
+
+  show('shared');
+}
+
+function startFromShared() {
+  /* Reset scores but keep hash in URL so user can come back */
+  gender = null; qIdx = 0; picked = null; chosen.length = 0; scores = {};
+  currentTop3 = null; storyCanvas = null;
+  var img = document.getElementById('story-preview-img');
+  var ldr = document.getElementById('story-preview-loading');
+  if (img) { img.style.display = 'none'; img.src = ''; }
+  if (ldr) ldr.style.display = 'flex';
+  var lu = document.getElementById('share-link-url');
+  if (lu) lu.textContent = 'Building your link\u2026';
+  try { history.replaceState(null, '', window.location.pathname); } catch(e) {}
+  document.querySelectorAll('.gender-btn').forEach(function(b) { b.classList.remove('sel'); });
+  document.getElementById('start-btn').classList.remove('on');
+  show('welcome');
+}
+
+function showSharedResults() {
+  if (!sharedKeys || !sharedGender) return;
+  gender = sharedGender;
   show('results');
-  buildResults(keys, 100);
+  buildResults(sharedKeys, 100);
 }
 
 window.addEventListener('DOMContentLoaded', loadFromHash);
 </script>
-
-<!--
-  ════════════════════════════════════════════════════════
-  SHOPIFY HOSTING INSTRUCTIONS
-  ════════════════════════════════════════════════════════
-
-  OPTION A — Custom HTML Section (easiest, recommended)
-  ───────────────────────────────────────────────────────
-  1. Shopify Admin → Online Store → Themes → Customize
-  2. Open the page where you want the quiz
-  3. Click "Add section" → "Custom HTML"
-  4. Paste the ENTIRE contents of this file into the HTML field
-
-  OPTION B — Standalone Page with Custom Template
-  ───────────────────────────────────────────────────────
-  1. Shopify Admin → Online Store → Themes → Edit Code
-  2. Under "Templates", click "Add a new template"
-     → type: page  → name: vocation-quiz
-  3. Replace the template body with this file's full HTML
-     (You can remove the Shopify header/footer liquid tags
-      if you want a fullscreen, distraction-free experience)
-  4. Shopify Admin → Online Store → Pages → Add Page
-  5. Set Template suffix = "page.vocation-quiz", then Save & Publish
-
-  OPTION C — iframe Embed (if hosting this file externally)
-  ───────────────────────────────────────────────────────
-  <iframe src="YOUR_HOSTED_URL"
-    style="width:100%; min-height:950px; border:none;">
-  </iframe>
-
-  ════════════════════════════════════════════════════════
--->
 </body>
 </html>
-
