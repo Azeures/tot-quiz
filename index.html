@@ -650,10 +650,10 @@
 ════════════════════════════════════════ */
 const VOC = {
   VD: {
-    name: "Verbum Dei Community",
+    name: "Verbum Dei Missionaries",
     gender: ["F"],
-    desc: "You are drawn to contemplative community life rooted entirely in the living Word of God. The Verbum Dei is a feminine apostolic community whose heart is Scripture — proclaiming it in intimate community, prayer, and mission. You likely carry a contemplative soul with apostolic fire, drawn to small intentional communities of prayer and generous service.",
-    sg: "Verbum Dei has a presence in Singapore, forming women in deep Scriptural spirituality and missionary zeal."
+    desc: "You are drawn to contemplative community life rooted entirely in the living Word of God. The Verbum Dei is a missionary family with both a female branch and a male branch — the Verbum Dei Missionary Fraternity, which includes priests and brothers — present across many parts of the world, including two Singaporean priests currently serving in Manila and Russia. Their mission is to preach the Word of God to all people: men and women, young and old. You carry a contemplative soul with apostolic fire, and your heart is for everyone — no one is outside the reach of the Word.",
+    sg: "In Singapore, the female branch of Verbum Dei is present. Their lay disciples community, however, is open to both men and women of all ages, formed together in Scripture and sent on mission."
   },
   RGS: {
     name: "Religious of the Good Shepherd",
@@ -1110,7 +1110,7 @@ var storyCanvas = null;
 var currentTop3 = null;
 
 var VOC_TAGLINES = {
-  VD:  'Called to the Living Word \u2022 Called to Community',
+  VD:  'Called to the Living Word \u2022 Called to preach to all',
   RGS: 'Called to seek and find every last lost sheep',
   IJ:  'Called to form the faith of a new generation',
   OD:  'Called to sanctify every ordinary moment',
@@ -1524,5 +1524,37 @@ function showSharedResults() {
 
 window.addEventListener('DOMContentLoaded', loadFromHash);
 </script>
+
+<!--
+  ════════════════════════════════════════════════════════
+  SHOPIFY HOSTING INSTRUCTIONS
+  ════════════════════════════════════════════════════════
+
+  OPTION A — Custom HTML Section (easiest, recommended)
+  ───────────────────────────────────────────────────────
+  1. Shopify Admin → Online Store → Themes → Customize
+  2. Open the page where you want the quiz
+  3. Click "Add section" → "Custom HTML"
+  4. Paste the ENTIRE contents of this file into the HTML field
+
+  OPTION B — Standalone Page with Custom Template
+  ───────────────────────────────────────────────────────
+  1. Shopify Admin → Online Store → Themes → Edit Code
+  2. Under "Templates", click "Add a new template"
+     → type: page  → name: vocation-quiz
+  3. Replace the template body with this file's full HTML
+     (You can remove the Shopify header/footer liquid tags
+      if you want a fullscreen, distraction-free experience)
+  4. Shopify Admin → Online Store → Pages → Add Page
+  5. Set Template suffix = "page.vocation-quiz", then Save & Publish
+
+  OPTION C — iframe Embed (if hosting this file externally)
+  ───────────────────────────────────────────────────────
+  <iframe src="YOUR_HOSTED_URL"
+    style="width:100%; min-height:950px; border:none;">
+  </iframe>
+
+  ════════════════════════════════════════════════════════
+-->
 </body>
 </html>
